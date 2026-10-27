@@ -1,0 +1,379 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 860" width="100%" height="100%">
+  <defs>
+    <!-- Dark & Cyber Gradients -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0a0f1d"/>
+      <stop offset="50%" stop-color="#0e172a"/>
+      <stop offset="100%" stop-color="#070b14"/>
+    </linearGradient>
+
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="rgba(30, 41, 59, 0.85)"/>
+      <stop offset="100%" stop-color="rgba(15, 23, 42, 0.95)"/>
+    </linearGradient>
+
+    <linearGradient id="azureBlueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0078d4"/>
+      <stop offset="100%" stop-color="#00b4d8"/>
+    </linearGradient>
+
+    <linearGradient id="cyanGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00d2ff"/>
+      <stop offset="100%" stop-color="#3a7bd5"/>
+    </linearGradient>
+
+    <linearGradient id="greenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+
+    <linearGradient id="redGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ef4444"/>
+      <stop offset="100%" stop-color="#b91c1c"/>
+    </linearGradient>
+
+    <linearGradient id="purpleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8b5cf6"/>
+      <stop offset="100%" stop-color="#6d28d9"/>
+    </linearGradient>
+
+    <!-- Glowing Filters -->
+    <filter id="cyanGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+
+    <filter id="softShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#000000" flood-opacity="0.6"/>
+    </filter>
+
+    <!-- Pulse Animation for Live Packets -->
+    <style>
+      .pulse-line {
+        stroke-dasharray: 8, 8;
+        animation: dashMove 2s linear infinite;
+      }
+      @keyframes dashMove {
+        to { stroke-dashoffset: -16; }
+      }
+      .glow-pulse {
+        animation: glowOscillate 3s ease-in-out infinite alternate;
+      }
+      @keyframes glowOscillate {
+        from { filter: drop-shadow(0 0 4px rgba(0, 210, 255, 0.4)); }
+        to { filter: drop-shadow(0 0 16px rgba(0, 210, 255, 0.8)); }
+      }
+      .node-text { font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif; }
+    </style>
+  </defs>
+
+  <!-- Background Canvas -->
+  <rect width="1200" height="860" rx="16" fill="url(#bgGrad)" stroke="#1e293b" stroke-width="2"/>
+  <rect x="20" y="20" width="1160" height="820" rx="12" fill="none" stroke="rgba(0, 210, 255, 0.15)" stroke-width="1"/>
+
+  <!-- ========================================================================= -->
+  <!-- HEADER SECTION                                                            -->
+  <!-- ========================================================================= -->
+  <g transform="translate(45, 45)">
+    <!-- Cloud & Shield Icon -->
+    <circle cx="28" cy="28" r="26" fill="url(#azureBlueGrad)" filter="url(#cyanGlow)"/>
+    <path d="M18 30 L26 38 L38 20" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+    
+    <text x="68" y="24" fill="#ffffff" font-size="22" font-weight="800" class="node-text" letter-spacing="-0.5">
+      Building a Secure &amp; Automated Cloud Infrastructure
+    </text>
+    <text x="68" y="44" fill="#00d2ff" font-size="12" font-weight="600" class="node-text" letter-spacing="0.5">
+      From code to cloud – with security, automation and AI &bull; Smart Accident Detection &amp; Emergency Response System (UK)
+    </text>
+
+    <!-- Right Header Badges -->
+    <g transform="translate(830, -5)">
+      <rect x="0" y="0" width="280" height="58" rx="8" fill="rgba(15, 23, 42, 0.8)" stroke="rgba(0, 210, 255, 0.3)" stroke-width="1"/>
+      <circle cx="24" cy="29" r="6" fill="#10b981" class="glow-pulse"/>
+      <text x="40" y="24" fill="#94a3b8" font-size="10" font-weight="700" class="node-text">ROLE: DevSecOps / Cloud Engineer</text>
+      <text x="40" y="42" fill="#38bdf8" font-size="12" font-weight="800" class="node-text">Status: 100% Verified &amp; Production Ready</text>
+    </g>
+  </g>
+
+  <!-- Title Sub-bar -->
+  <line x1="45" y1="120" x2="1155" y2="120" stroke="rgba(255, 255, 255, 0.1)" stroke-width="1"/>
+  <text x="50" y="142" fill="#38bdf8" font-size="14" font-weight="800" class="node-text" letter-spacing="1">
+    ⚙️ SOLUTION ARCHITECTURE: SECURE | SCALABLE | COMPLIANT
+  </text>
+
+  <!-- ========================================================================= -->
+  <!-- 1. DEVELOPERS & SOURCE CODE                                               -->
+  <!-- ========================================================================= -->
+  <g transform="translate(50, 165)" filter="url(#softShadow)">
+    <rect width="130" height="230" rx="10" fill="url(#cardGrad)" stroke="rgba(255, 255, 255, 0.1)" stroke-width="1.5"/>
+    <circle cx="65" cy="50" r="26" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/>
+    <text x="65" y="56" text-anchor="middle" font-size="22">👨‍💻</text>
+    <text x="65" y="98" fill="#ffffff" font-size="13" font-weight="700" text-anchor="middle" class="node-text">Developers</text>
+    <text x="65" y="115" fill="#94a3b8" font-size="10" text-anchor="middle" class="node-text">Code Push / PR</text>
+
+    <!-- GitHub Box -->
+    <rect x="15" y="140" width="100" height="65" rx="6" fill="#0f172a" stroke="rgba(0, 210, 255, 0.4)" stroke-width="1"/>
+    <text x="65" y="165" text-anchor="middle" font-size="18">🐙</text>
+    <text x="65" y="185" fill="#38bdf8" font-size="11" font-weight="700" text-anchor="middle" class="node-text">GitHub</text>
+    <text x="65" y="196" fill="#64748b" font-size="9" text-anchor="middle" class="node-text">Source Code</text>
+  </g>
+
+  <!-- Data Flow 1: Devs -> CI/CD -->
+  <path d="M 180 280 L 225 280" stroke="#00d2ff" stroke-width="2.5" class="pulse-line" fill="none"/>
+  <polygon points="225,275 235,280 225,285" fill="#00d2ff"/>
+
+  <!-- ========================================================================= -->
+  <!-- 2. CI/CD PIPELINE (GitHub Actions + Azure DevOps)                         -->
+  <!-- ========================================================================= -->
+  <g transform="translate(235, 165)" filter="url(#softShadow)">
+    <rect width="210" height="230" rx="10" fill="url(#cardGrad)" stroke="#38bdf8" stroke-width="1.5" class="glow-pulse"/>
+    
+    <!-- Header -->
+    <rect x="0" y="0" width="210" height="34" rx="10" fill="url(#azureBlueGrad)"/>
+    <rect x="0" y="24" width="210" height="10" fill="url(#azureBlueGrad)"/>
+    <text x="105" y="22" fill="#ffffff" font-size="11" font-weight="800" text-anchor="middle" class="node-text">
+      🚀 CI/CD PIPELINE (Actions)
+    </text>
+
+    <!-- Sub Steps -->
+    <g transform="translate(15, 45)">
+      <rect width="180" height="36" rx="6" fill="#0b1120" stroke="rgba(255, 255, 255, 0.08)"/>
+      <text x="12" y="22" fill="#e2e8f0" font-size="10" font-weight="600" class="node-text">⚙️ Build &amp; Test (Pytest)</text>
+
+      <rect y="44" width="180" height="36" rx="6" fill="#0b1120" stroke="rgba(255, 255, 255, 0.08)"/>
+      <text x="12" y="66" fill="#e2e8f0" font-size="10" font-weight="600" class="node-text">🔍 Static Analysis (TFsec/Lint)</text>
+
+      <rect y="88" width="180" height="36" rx="6" fill="#0b1120" stroke="rgba(255, 255, 255, 0.08)"/>
+      <text x="12" y="110" fill="#e2e8f0" font-size="10" font-weight="600" class="node-text">🛡️ Security Scan (Gitleaks)</text>
+
+      <rect y="132" width="180" height="36" rx="6" fill="#0b1120" stroke="rgba(16, 185, 129, 0.4)" stroke-width="1.2"/>
+      <text x="12" y="154" fill="#34d399" font-size="10" font-weight="700" class="node-text">🚀 Deploy via Terraform</text>
+    </g>
+  </g>
+
+  <!-- Data Flow 2: CI/CD -> DevSecOps -->
+  <path d="M 445 280 L 490 280" stroke="#00d2ff" stroke-width="2.5" class="pulse-line" fill="none"/>
+  <polygon points="490,275 500,280 490,285" fill="#00d2ff"/>
+
+  <!-- ========================================================================= -->
+  <!-- 3. DEVSECOPS LAYER                                                        -->
+  <!-- ========================================================================= -->
+  <g transform="translate(500, 165)" filter="url(#softShadow)">
+    <rect width="180" height="230" rx="10" fill="url(#cardGrad)" stroke="#10b981" stroke-width="1.5"/>
+    
+    <rect x="0" y="0" width="180" height="34" rx="10" fill="url(#greenGrad)"/>
+    <rect x="0" y="24" width="180" height="10" fill="url(#greenGrad)"/>
+    <text x="90" y="22" fill="#ffffff" font-size="11" font-weight="800" text-anchor="middle" class="node-text">
+      🛡️ DEVSECOPS LAYER
+    </text>
+
+    <g transform="translate(15, 45)">
+      <rect width="150" height="36" rx="6" fill="#0b1120" stroke="rgba(255, 255, 255, 0.08)"/>
+      <text x="10" y="22" fill="#6ee7b7" font-size="10" font-weight="700" class="node-text">✓ SAST / DAST (Bandit)</text>
+
+      <rect y="44" width="150" height="36" rx="6" fill="#0b1120" stroke="rgba(255, 255, 255, 0.08)"/>
+      <text x="10" y="66" fill="#6ee7b7" font-size="10" font-weight="700" class="node-text">✓ IaC Security (Checkov)</text>
+
+      <rect y="88" width="150" height="36" rx="6" fill="#0b1120" stroke="rgba(255, 255, 255, 0.08)"/>
+      <text x="10" y="110" fill="#6ee7b7" font-size="10" font-weight="700" class="node-text">✓ Policy as Code (Azure)</text>
+
+      <rect y="132" width="150" height="36" rx="6" fill="#0b1120" stroke="rgba(255, 255, 255, 0.08)"/>
+      <text x="10" y="154" fill="#6ee7b7" font-size="10" font-weight="700" class="node-text">✓ Terratest Validation</text>
+    </g>
+  </g>
+
+  <!-- Data Flow 3: DevSecOps -> Azure Infrastructure -->
+  <path d="M 680 280 L 725 280" stroke="#00d2ff" stroke-width="2.5" class="pulse-line" fill="none"/>
+  <polygon points="725,275 735,280 725,285" fill="#00d2ff"/>
+
+  <!-- ========================================================================= -->
+  <!-- 4. AZURE INFRASTRUCTURE                                                   -->
+  <!-- ========================================================================= -->
+  <g transform="translate(735, 165)" filter="url(#softShadow)">
+    <rect width="210" height="230" rx="10" fill="url(#cardGrad)" stroke="#0078d4" stroke-width="1.5"/>
+    
+    <rect x="0" y="0" width="210" height="34" rx="10" fill="url(#azureBlueGrad)"/>
+    <rect x="0" y="24" width="210" height="10" fill="url(#azureBlueGrad)"/>
+    <text x="105" y="22" fill="#ffffff" font-size="11" font-weight="800" text-anchor="middle" class="node-text">
+      ☁️ AZURE CLOUD (UK South)
+    </text>
+
+    <g transform="translate(15, 42)">
+      <text x="0" y="20" fill="#38bdf8" font-size="11" font-weight="700" class="node-text">🌐 VNet + Strict NSGs</text>
+      <text x="0" y="34" fill="#64748b" font-size="9" class="node-text">Subnets: App, DB, Private Endpoints</text>
+
+      <text x="0" y="58" fill="#38bdf8" font-size="11" font-weight="700" class="node-text">🔐 Azure Key Vault (HSM)</text>
+      <text x="0" y="72" fill="#64748b" font-size="9" class="node-text">Soft-Delete &amp; Purge Protection</text>
+
+      <text x="0" y="96" fill="#38bdf8" font-size="11" font-weight="700" class="node-text">🆔 Managed Identity (UAMI)</text>
+      <text x="0" y="110" fill="#64748b" font-size="9" class="node-text">Zero Static Passwords in Code</text>
+
+      <text x="0" y="134" fill="#38bdf8" font-size="11" font-weight="700" class="node-text">📊 Monitor &amp; Log Analytics</text>
+      <text x="0" y="148" fill="#64748b" font-size="9" class="node-text">Distributed Tracing &amp; APM</text>
+
+      <text x="0" y="172" fill="#10b981" font-size="11" font-weight="700" class="node-text">💰 FinOps Cost Management</text>
+    </g>
+  </g>
+
+  <!-- Data Flow 4: Azure -> Application & Data -->
+  <path d="M 945 280 L 980 280" stroke="#00d2ff" stroke-width="2.5" class="pulse-line" fill="none"/>
+  <polygon points="980,275 990,280 980,285" fill="#00d2ff"/>
+
+  <!-- ========================================================================= -->
+  <!-- 5. APPLICATION & DATA (MONOLITHIC 3-TIER)                                 -->
+  <!-- ========================================================================= -->
+  <g transform="translate(990, 165)" filter="url(#softShadow)">
+    <rect width="165" height="230" rx="10" fill="url(#cardGrad)" stroke="#8b5cf6" stroke-width="1.5"/>
+    
+    <rect x="0" y="0" width="165" height="34" rx="10" fill="url(#purpleGrad)"/>
+    <rect x="0" y="24" width="165" height="10" fill="url(#purpleGrad)"/>
+    <text x="82" y="22" fill="#ffffff" font-size="10.5" font-weight="800" text-anchor="middle" class="node-text">
+      📦 3-TIER APP &amp; DATA
+    </text>
+
+    <g transform="translate(12, 45)">
+      <!-- Tier 1 -->
+      <rect width="140" height="34" rx="5" fill="#0b1120" stroke="rgba(139, 92, 246, 0.4)"/>
+      <text x="8" y="16" fill="#c4b5fd" font-size="9" font-weight="700" class="node-text">Tier 1: Web UI &amp; Simulator</text>
+      <text x="8" y="28" fill="#64748b" font-size="8" class="node-text">Glassmorphism Dashboard</text>
+
+      <!-- Tier 2 -->
+      <rect y="42" width="140" height="34" rx="5" fill="#0b1120" stroke="rgba(139, 92, 246, 0.4)"/>
+      <text x="8" y="58" fill="#c4b5fd" font-size="9" font-weight="700" class="node-text">Tier 2: Web / API (Flask)</text>
+      <text x="8" y="70" fill="#64748b" font-size="8" class="node-text">Crash Detection Engine</text>
+
+      <!-- Tier 3 -->
+      <rect y="84" width="140" height="34" rx="5" fill="#0b1120" stroke="rgba(139, 92, 246, 0.4)"/>
+      <text x="8" y="100" fill="#c4b5fd" font-size="9" font-weight="700" class="node-text">Tier 3: SQL Database (hrdb)</text>
+      <text x="8" y="112" fill="#64748b" font-size="8" class="node-text">TDE Encryption, PITR</text>
+
+      <!-- Blob -->
+      <rect y="126" width="140" height="34" rx="5" fill="#0b1120" stroke="rgba(139, 92, 246, 0.4)"/>
+      <text x="8" y="142" fill="#c4b5fd" font-size="9" font-weight="700" class="node-text">Azure Blob (crash-evidence)</text>
+      <text x="8" y="154" fill="#64748b" font-size="8" class="node-text">TLS 1.2 Evidence Vault</text>
+    </g>
+  </g>
+
+  <!-- ========================================================================= -->
+  <!-- MIDDLE DIVIDER & AI AGENTS SECTION                                        -->
+  <!-- ========================================================================= -->
+  <line x1="45" y1="420" x2="1155" y2="420" stroke="rgba(255, 255, 255, 0.1)" stroke-width="1"/>
+
+  <text x="50" y="445" fill="#00d2ff" font-size="14" font-weight="800" class="node-text" letter-spacing="1">
+    🧠 AI AGENTS (AZURE OPENAI - GPT-4O) &bull; Smarter reviews. Faster fixes. Better security.
+  </text>
+
+  <!-- 5 AI Agent Cards Grid -->
+  <g transform="translate(50, 465)">
+    <!-- 1. Risk Agent -->
+    <g transform="translate(0, 0)" filter="url(#softShadow)">
+      <rect width="210" height="110" rx="8" fill="url(#cardGrad)" stroke="rgba(245, 158, 11, 0.4)" stroke-width="1.2"/>
+      <circle cx="28" cy="28" r="14" fill="rgba(245, 158, 11, 0.15)"/>
+      <text x="28" y="34" text-anchor="middle" font-size="14">🔍</text>
+      <text x="50" y="32" fill="#fbbf24" font-size="12" font-weight="800" class="node-text">Risk Agent</text>
+      <text x="14" y="58" fill="#94a3b8" font-size="10" class="node-text">Identifies potential architectural,</text>
+      <text x="14" y="72" fill="#94a3b8" font-size="10" class="node-text">resilience &amp; SPOF risks in IaC</text>
+      <text x="14" y="86" fill="#94a3b8" font-size="10" class="node-text">and application templates.</text>
+    </g>
+
+    <!-- 2. Security Agent -->
+    <g transform="translate(235, 0)" filter="url(#softShadow)">
+      <rect width="210" height="110" rx="8" fill="url(#cardGrad)" stroke="rgba(16, 185, 129, 0.4)" stroke-width="1.2"/>
+      <circle cx="28" cy="28" r="14" fill="rgba(16, 185, 129, 0.15)"/>
+      <text x="28" y="34" text-anchor="middle" font-size="14">🛡️</text>
+      <text x="50" y="32" fill="#34d399" font-size="12" font-weight="800" class="node-text">Security Agent</text>
+      <text x="14" y="58" fill="#94a3b8" font-size="10" class="node-text">Detects cloud vulnerabilities,</text>
+      <text x="14" y="72" fill="#94a3b8" font-size="10" class="node-text">permissive NSG firewalls &amp;</text>
+      <text x="14" y="86" fill="#94a3b8" font-size="10" class="node-text">CIS benchmark misconfigs.</text>
+    </g>
+
+    <!-- 3. PR Review Agent -->
+    <g transform="translate(470, 0)" filter="url(#softShadow)">
+      <rect width="210" height="110" rx="8" fill="url(#cardGrad)" stroke="rgba(56, 189, 248, 0.4)" stroke-width="1.2"/>
+      <circle cx="28" cy="28" r="14" fill="rgba(56, 189, 248, 0.15)"/>
+      <text x="28" y="34" text-anchor="middle" font-size="14">💻</text>
+      <text x="50" y="32" fill="#38bdf8" font-size="12" font-weight="800" class="node-text">PR Review Agent</text>
+      <text x="14" y="58" fill="#94a3b8" font-size="10" class="node-text">Reviews GitHub pull requests</text>
+      <text x="14" y="72" fill="#94a3b8" font-size="10" class="node-text">and posts automated, line-level</text>
+      <text x="14" y="86" fill="#94a3b8" font-size="10" class="node-text">code &amp; security feedback.</text>
+    </g>
+
+    <!-- 4. Post-Deployment Agent -->
+    <g transform="translate(705, 0)" filter="url(#softShadow)">
+      <rect width="210" height="110" rx="8" fill="url(#cardGrad)" stroke="rgba(0, 210, 255, 0.4)" stroke-width="1.2"/>
+      <circle cx="28" cy="28" r="14" fill="rgba(0, 210, 255, 0.15)"/>
+      <text x="28" y="34" text-anchor="middle" font-size="14">✅</text>
+      <text x="50" y="32" fill="#00d2ff" font-size="12" font-weight="800" class="node-text">Post-Deploy Agent</text>
+      <text x="14" y="58" fill="#94a3b8" font-size="10" class="node-text">Verifies infrastructure health,</text>
+      <text x="14" y="72" fill="#94a3b8" font-size="10" class="node-text">latency thresholds, SSL probes</text>
+      <text x="14" y="86" fill="#94a3b8" font-size="10" class="node-text">and database connection pools.</text>
+    </g>
+
+    <!-- 5. RCA Agent -->
+    <g transform="translate(940, 0)" filter="url(#softShadow)">
+      <rect width="165" height="110" rx="8" fill="url(#cardGrad)" stroke="rgba(239, 68, 68, 0.4)" stroke-width="1.2"/>
+      <circle cx="28" cy="28" r="14" fill="rgba(239, 68, 68, 0.15)"/>
+      <text x="28" y="34" text-anchor="middle" font-size="14">🔬</text>
+      <text x="50" y="32" fill="#f87171" font-size="12" font-weight="800" class="node-text">RCA Agent</text>
+      <text x="14" y="58" fill="#94a3b8" font-size="10" class="node-text">Root Cause Analysis</text>
+      <text x="14" y="72" fill="#94a3b8" font-size="10" class="node-text">on live crash traces &amp;</text>
+      <text x="14" y="86" fill="#94a3b8" font-size="10" class="node-text">suggests instant fixes.</text>
+    </g>
+  </g>
+
+  <!-- ========================================================================= -->
+  <!-- BOTTOM SECTION: RESULTS & BUSINESS IMPACT BANNER                          -->
+  <!-- ========================================================================= -->
+  <line x1="45" y1="600" x2="1155" y2="600" stroke="rgba(255, 255, 255, 0.1)" stroke-width="1"/>
+  
+  <text x="50" y="625" fill="#ffffff" font-size="14" font-weight="800" class="node-text" letter-spacing="1">
+    📊 RESULTS &amp; PROVEN BUSINESS IMPACT
+  </text>
+
+  <g transform="translate(50, 645)">
+    <!-- Metric 1: 100% Security -->
+    <g transform="translate(0, 0)" filter="url(#softShadow)">
+      <rect width="255" height="115" rx="10" fill="url(#cardGrad)" stroke="rgba(16, 185, 129, 0.5)" stroke-width="1.5"/>
+      <circle cx="36" cy="40" r="20" fill="rgba(16, 185, 129, 0.2)"/>
+      <text x="36" y="47" text-anchor="middle" font-size="18">🛡️</text>
+      <text x="68" y="46" fill="#10b981" font-size="28" font-weight="900" class="node-text">100%</text>
+      <text x="68" y="66" fill="#e2e8f0" font-size="12" font-weight="700" class="node-text">Security Scans in Pipeline</text>
+      <text x="18" y="94" fill="#94a3b8" font-size="10" class="node-text">Zero secrets or critical misconfigurations</text>
+    </g>
+
+    <!-- Metric 2: 25% Cost Optimization -->
+    <g transform="translate(285, 0)" filter="url(#softShadow)">
+      <rect width="255" height="115" rx="10" fill="url(#cardGrad)" stroke="rgba(0, 210, 255, 0.5)" stroke-width="1.5"/>
+      <circle cx="36" cy="40" r="20" fill="rgba(0, 210, 255, 0.2)"/>
+      <text x="36" y="47" text-anchor="middle" font-size="18">⚡</text>
+      <text x="68" y="46" fill="#00d2ff" font-size="28" font-weight="900" class="node-text">25%</text>
+      <text x="68" y="66" fill="#e2e8f0" font-size="12" font-weight="700" class="node-text">Cloud Cost Optimization</text>
+      <text x="18" y="94" fill="#94a3b8" font-size="10" class="node-text">Automated FinOps budgets &amp; right-sizing</text>
+    </g>
+
+    <!-- Metric 3: Faster Release Cycle -->
+    <g transform="translate(570, 0)" filter="url(#softShadow)">
+      <rect width="255" height="115" rx="10" fill="url(#cardGrad)" stroke="rgba(139, 92, 246, 0.5)" stroke-width="1.5"/>
+      <circle cx="36" cy="40" r="20" fill="rgba(139, 92, 246, 0.2)"/>
+      <text x="36" y="47" text-anchor="middle" font-size="18">⏱️</text>
+      <text x="68" y="46" fill="#c4b5fd" font-size="24" font-weight="900" class="node-text">FASTER</text>
+      <text x="68" y="66" fill="#e2e8f0" font-size="12" font-weight="700" class="node-text">Release Cycle &amp; Deploy</text>
+      <text x="18" y="94" fill="#94a3b8" font-size="10" class="node-text">Hours reduced to automated minutes</text>
+    </g>
+
+    <!-- Metric 4: Improved Observability -->
+    <g transform="translate(855, 0)" filter="url(#softShadow)">
+      <rect width="250" height="115" rx="10" fill="url(#cardGrad)" stroke="rgba(56, 189, 248, 0.5)" stroke-width="1.5"/>
+      <circle cx="36" cy="40" r="20" fill="rgba(56, 189, 248, 0.2)"/>
+      <text x="36" y="47" text-anchor="middle" font-size="18">📈</text>
+      <text x="68" y="46" fill="#38bdf8" font-size="24" font-weight="900" class="node-text">IMPROVED</text>
+      <text x="68" y="66" fill="#e2e8f0" font-size="12" font-weight="700" class="node-text">Observability &amp; Gov</text>
+      <text x="18" y="94" fill="#94a3b8" font-size="10" class="node-text">End-to-end distributed APM tracing</text>
+    </g>
+  </g>
+
+  <!-- Footer Tagline -->
+  <text x="600" y="810" fill="#64748b" font-size="12" font-weight="600" text-anchor="middle" class="node-text">
+    CLOUD &bull; AUTOMATION &bull; SECURITY &bull; ARTIFICIAL INTELLIGENCE &bull; Building a safer, smarter tomorrow
+  </text>
+</svg>

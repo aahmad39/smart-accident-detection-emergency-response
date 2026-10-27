@@ -58,6 +58,12 @@ The **Smart Accident Detection & Emergency Response System (UK)** solves this by
 
 ## 2. Solution Architecture Blueprint
 
+<div align="center">
+  <img src="docs/images/solution_architecture.svg" alt="Smart Accident Detection & Emergency Response System Architecture" width="100%" style="border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+</div>
+
+<br/>
+
 ```mermaid
 flowchart LR
     Devs["👨‍💻 Developers<br/>(Code Push / PR)"] --> GitHub["🐙 GitHub<br/>(Source Repository)"]

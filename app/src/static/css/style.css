@@ -547,3 +547,102 @@ footer {
     color: var(--text-muted);
     font-size: 0.82rem;
 }
+
+/* ==========================================================================
+   Live Cyber Glow & Animated Elements
+   ========================================================================== */
+
+/* Neon Animated Gradient Border */
+.glow-border {
+    position: relative;
+}
+.glow-border::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    background: linear-gradient(45deg, #0078d4, #00d2ff, #10b981, #ef4444);
+    border-radius: calc(var(--radius-lg) + 2px);
+    z-index: -1;
+    opacity: 0.4;
+    filter: blur(8px);
+    background-size: 300% 300%;
+    animation: gradientShift 6s ease infinite;
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Sonar Ping Rings for Radar */
+.sonar-emitter {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+}
+
+.sonar-emitter::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 2px solid var(--emergency-red);
+    animation: sonarWave 2s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+}
+
+@keyframes sonarWave {
+    0% {
+        width: 14px;
+        height: 14px;
+        opacity: 1;
+    }
+    100% {
+        width: 65px;
+        height: 65px;
+        opacity: 0;
+    }
+}
+
+/* Ticker Bar */
+.live-cad-ticker {
+    background: rgba(15, 23, 42, 0.9);
+    border: 1px solid rgba(0, 210, 255, 0.25);
+    border-radius: var(--radius-md);
+    padding: 0.65rem 1.25rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    overflow: hidden;
+}
+
+.ticker-label {
+    background: var(--emergency-red);
+    color: #ffffff;
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    padding: 0.25rem 0.6rem;
+    border-radius: 4px;
+    letter-spacing: 0.05em;
+    flex-shrink: 0;
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+}
+
+.ticker-content {
+    color: #e2e8f0;
+    font-size: 0.82rem;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: flex;
+    gap: 2rem;
+}
+

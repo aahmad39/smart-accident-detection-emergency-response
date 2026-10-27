@@ -71,3 +71,8 @@ def test_ingest_collision_telemetry(client):
     data = res.get_json()
     assert data["incident"]["severity"] in ["High", "Critical"]
     assert data["auto_dispatched"] is True
+
+def test_architecture_page(client):
+    res = client.get("/architecture")
+    assert res.status_code == 200
+    assert b"Building a Secure &amp; Automated Cloud Infrastructure" in res.data or b"Architecture" in res.data

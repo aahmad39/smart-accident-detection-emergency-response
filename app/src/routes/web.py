@@ -73,6 +73,11 @@ def simulator():
     vehicles = Vehicle.query.all()
     return render_template("simulator.html", vehicles=vehicles)
 
+@web_bp.route("/architecture")
+def architecture():
+    """Interactive Cloud Architecture & DevSecOps Topology presentation."""
+    return render_template("architecture.html")
+
 @web_bp.route("/ai-hub")
 def ai_hub():
     """Azure OpenAI AI Agents control room (Risk, Security, PR Review, Post-Deploy, RCA)."""

@@ -29,6 +29,7 @@
 
         <ul class="nav-links">
             <li><a href="{{ url_for('web.dashboard') }}" class="nav-link {% if request.endpoint == 'web.dashboard' %}active{% endif %}"><i class="fa-solid fa-chart-line"></i> Dashboard</a></li>
+            <li><a href="{{ url_for('web.architecture') }}" class="nav-link {% if request.endpoint == 'web.architecture' %}active{% endif %}"><i class="fa-solid fa-network-wired"></i> Architecture</a></li>
             <li><a href="{{ url_for('web.incidents') }}" class="nav-link {% if request.endpoint == 'web.incidents' %}active{% endif %}"><i class="fa-solid fa-triangle-exclamation"></i> Incidents</a></li>
             <li><a href="{{ url_for('web.dispatch_center') }}" class="nav-link {% if request.endpoint == 'web.dispatch_center' %}active{% endif %}"><i class="fa-solid fa-truck-medical"></i> 999 Dispatch</a></li>
             <li><a href="{{ url_for('web.simulator') }}" class="nav-link {% if request.endpoint == 'web.simulator' %}active{% endif %}"><i class="fa-solid fa-bolt"></i> Crash Simulator</a></li>

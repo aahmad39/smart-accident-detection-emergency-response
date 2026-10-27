@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+
+{% block title %}Solution Architecture & Cloud Topology - Smart Accident Response (UK){% endblock %}
+
+{% block content %}
+<div class="glass-panel" style="border-top: 4px solid var(--cyber-cyan);">
+    <div class="panel-header">
+        <div>
+            <div style="font-size: 0.8rem; color: var(--cyber-cyan); text-transform: uppercase; font-weight: 800; letter-spacing: 0.05em;">
+                Enterprise Cloud Architecture &bull; Microsoft Azure UK South
+            </div>
+            <h1 class="panel-title" style="font-size: 1.8rem; margin-top: 0.25rem;">
+                Building a Secure &amp; Automated Cloud Infrastructure
+            </h1>
+            <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0.25rem;">
+                From code to cloud – with security, automation and AI &bull; Monolithic 3-Tier Web Application with DevSecOps &amp; Autonomous AI Agents.
+            </p>
+        </div>
+
+        <div style="display: flex; gap: 0.75rem; align-items: center;">
+            <a href="{{ url_for('static', filename='img/solution_architecture.svg') }}" target="_blank" class="btn btn-outline" style="font-size: 0.82rem;">
+                <i class="fa-solid fa-up-right-from-square"></i> Full Screen SVG
+            </a>
+            <a href="{{ url_for('web.simulator') }}" class="btn btn-danger" style="font-size: 0.82rem;">
+                <i class="fa-solid fa-bolt"></i> Test Live Simulation
+            </a>
+        </div>
+    </div>
+
+    <!-- Live Animated Vector Architecture Blueprint -->
+    <div style="background: #070b14; border: 1px solid var(--border-card); border-radius: var(--radius-lg); padding: 1.5rem; text-align: center; margin-bottom: 2rem; position: relative; overflow: hidden; box-shadow: inset 0 0 50px rgba(0, 210, 255, 0.05);">
+        <div style="position: absolute; top: 18px; right: 24px; z-index: 10;">
+            <span class="badge" style="background: rgba(16, 185, 129, 0.2); color: #34d399; font-size: 0.78rem; padding: 0.35rem 0.85rem; border: 1px solid rgba(16, 185, 129, 0.4);">
+                <i class="fa-solid fa-circle-check"></i> LIVE CLUSTER VERIFIED
+            </span>
+        </div>
+
+        <img src="{{ url_for('static', filename='img/solution_architecture.svg') }}" alt="Solution Architecture" style="width: 100%; max-width: 1120px; height: auto; border-radius: 8px; filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.7));">
+    </div>
+
+    <!-- 4 Interactive Architectural Impact Highlights -->
+    <div class="kpi-grid" style="margin-bottom: 2.5rem;">
+        <div class="kpi-card" style="border-color: rgba(16, 185, 129, 0.3);">
+            <div class="kpi-header">
+                <span class="kpi-title">Pipeline Security</span>
+                <i class="fa-solid fa-shield-halved" style="color: var(--nhs-green); font-size: 1.25rem;"></i>
+            </div>
+            <div class="kpi-value" style="color: var(--nhs-green);">100%</div>
+            <div class="kpi-sub">Security scans enforced on every PR (Gitleaks, TFsec, Checkov, Bandit)</div>
+        </div>
+
+        <div class="kpi-card" style="border-color: rgba(0, 210, 255, 0.3);">
+            <div class="kpi-header">
+                <span class="kpi-title">Cloud Cost Optimization</span>
+                <i class="fa-solid fa-bolt" style="color: var(--cyber-cyan); font-size: 1.25rem;"></i>
+            </div>
+            <div class="kpi-value" style="color: var(--cyber-cyan);">25%</div>
+            <div class="kpi-sub">Achieved through automated FinOps budgets &amp; right-sized App Service SKUs</div>
+        </div>
+
+        <div class="kpi-card" style="border-color: rgba(139, 92, 246, 0.3);">
+            <div class="kpi-header">
+                <span class="kpi-title">Release Cycle Velocity</span>
+                <i class="fa-solid fa-rocket" style="color: #c4b5fd; font-size: 1.25rem;"></i>
+            </div>
+            <div class="kpi-value" style="color: #c4b5fd; font-size: 1.8rem; padding-top: 0.2rem;">FASTER</div>
+            <div class="kpi-sub">Deployment &amp; regression cycles cut from days to automated minutes</div>
+        </div>
+
+        <div class="kpi-card" style="border-color: rgba(56, 189, 248, 0.3);">
+            <div class="kpi-header">
+                <span class="kpi-title">Observability &amp; Gov</span>
+                <i class="fa-solid fa-chart-line" style="color: var(--police-blue); font-size: 1.25rem;"></i>
+            </div>
+            <div class="kpi-value" style="color: var(--police-blue); font-size: 1.8rem; padding-top: 0.2rem;">IMPROVED</div>
+            <div class="kpi-sub">Distributed APM tracing &amp; automated AI Root Cause Analysis (RCA)</div>
+        </div>
+    </div>
+
+    <!-- Deep-Dive Architecture Component Accordions / Panels -->
+    <h3 style="font-size: 1.3rem; margin-bottom: 1.25rem; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem;">
+        <i class="fa-solid fa-layer-group" style="color: var(--cyber-cyan);"></i> Architectural Pillars Breakdown
+    </h3>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 1.5rem;">
+        <!-- Pillar 1: CI/CD & DevSecOps -->
+        <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid var(--border-card); border-radius: var(--radius-md); padding: 1.5rem;">
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+                <div style="width: 36px; height: 36px; background: rgba(0, 120, 212, 0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--azure-blue);">
+                    <i class="fa-solid fa-code-merge"></i>
+                </div>
+                <div>
+                    <strong style="font-size: 1rem; color: var(--text-primary);">1. CI/CD &amp; DevSecOps Layer</strong>
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">GitHub Actions + Azure DevOps</div>
+                </div>
+            </div>
+            <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.65rem; font-size: 0.85rem; color: var(--text-secondary);">
+                <li><i class="fa-solid fa-check" style="color: var(--nhs-green);"></i> <strong>Secret Scanning:</strong> Gitleaks prevents accidental credential leaks.</li>
+                <li><i class="fa-solid fa-check" style="color: var(--nhs-green);"></i> <strong>IaC Security:</strong> TFsec &amp; Checkov enforce CIS Azure Benchmarks v2.0.</li>
+                <li><i class="fa-solid fa-check" style="color: var(--nhs-green);"></i> <strong>Application SAST:</strong> Bandit checks Python code for OWASP Top 10 flaws.</li>
+                <li><i class="fa-solid fa-check" style="color: var(--nhs-green);"></i> <strong>Policy as Code:</strong> Enforces mandatory FinOps tags &amp; private networking.</li>
+            </ul>
+        </div>
+
+        <!-- Pillar 2: Azure Cloud Infrastructure -->
+        <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid var(--border-card); border-radius: var(--radius-md); padding: 1.5rem;">
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+                <div style="width: 36px; height: 36px; background: rgba(16, 185, 129, 0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--nhs-green);">
+                    <i class="fa-brands fa-microsoft"></i>
+                </div>
+                <div>
+                    <strong style="font-size: 1rem; color: var(--text-primary);">2. Azure Cloud Infrastructure</strong>
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">UK South High-Availability Setup</div>
+                </div>
+            </div>
+            <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.65rem; font-size: 0.85rem; color: var(--text-secondary);">
+                <li><i class="fa-solid fa-check" style="color: var(--nhs-green);"></i> <strong>Virtual Network:</strong> Dedicated App, DB, and Private Endpoint subnets.</li>
+                <li><i class="fa-solid fa-check" style="color: var(--nhs-green);"></i> <strong>Managed Identity:</strong> Secretless communication between services.</li>
+                <li><i class="fa-solid fa-check" style="color: var(--nhs-green);"></i> <strong>Azure Key Vault:</strong> HSM encryption, soft-delete, and purge protection.</li>
+                <li><i class="fa-solid fa-check" style="color: var(--nhs-green);"></i> <strong>Cost Governance:</strong> Automated budget alerting at 80% and 100%.</li>
+            </ul>
+        </div>
+
+        <!-- Pillar 3: 3-Tier Monolith & AI -->
+        <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid var(--border-card); border-radius: var(--radius-md); padding: 1.5rem;">
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+                <div style="width: 36px; height: 36px; background: rgba(139, 92, 246, 0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #c4b5fd;">
+                    <i class="fa-solid fa-brain"></i>
+                </div>
+                <div>
+                    <strong style="font-size: 1rem; color: var(--text-primary);">3. 3-Tier Monolith &amp; AI Agents</strong>
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">Flask 3.11 + Azure OpenAI GPT-4o</div>
+                </div>
+            </div>
+            <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.65rem; font-size: 0.85rem; color: var(--text-secondary);">
+                <li><i class="fa-solid fa-check" style="color: var(--nhs-green);"></i> <strong>Tier 1 &amp; 2:</strong> Glassmorphic dashboard &amp; collision detection engine.</li>
+                <li><i class="fa-solid fa-check" style="color: var(--nhs-green);"></i> <strong>Tier 3:</strong> Azure SQL ('hrdb') with TDE Transparent Data Encryption.</li>
+                <li><i class="fa-solid fa-check" style="color: var(--nhs-green);"></i> <strong>Blob Storage:</strong> Crash evidence and dashcam video container.</li>
+                <li><i class="fa-solid fa-check" style="color: var(--nhs-green);"></i> <strong>AI Multi-Agent:</strong> Risk, Security, PR Review, Post-Deploy &amp; RCA Agents.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
