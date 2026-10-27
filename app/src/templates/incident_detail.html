@@ -1,0 +1,203 @@
+{% extends "base.html" %}
+
+{% block title %}Incident {{ incident.reference_id }} - Telemetry Report{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+    <a href="{{ url_for('web.incidents') }}" class="btn btn-outline" style="font-size: 0.8rem;">
+        &larr; Back to Incidents
+    </a>
+    <div style="display: flex; gap: 0.5rem;">
+        <span class="badge badge-{{ incident.severity.lower() }}" style="font-size: 0.85rem; padding: 0.45rem 0.95rem;">
+            {{ incident.severity }} SEVERITY
+        </span>
+        <span class="badge badge-status" style="font-size: 0.85rem; padding: 0.45rem 0.95rem;">
+            {{ incident.status }}
+        </span>
+    </div>
+</div>
+
+<div class="glass-panel" style="border-top: 4px solid {% if incident.severity == 'Critical' %}var(--emergency-red){% elif incident.severity == 'High' %}var(--warning-amber){% else %}var(--cyber-cyan){% endif %};">
+    <div class="panel-header">
+        <div>
+            <div style="font-size: 0.78rem; color: var(--cyber-cyan); text-transform: uppercase; font-weight: 700;">
+                UK Emergency Computer Aided Dispatch Record
+            </div>
+            <h1 class="panel-title" style="font-size: 1.6rem; margin-top: 0.25rem;">
+                {{ incident.reference_id }} &bull; {{ incident.location_name }}
+            </h1>
+            <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">
+                <i class="fa-solid fa-clock"></i> Ingested: {{ incident.timestamp.strftime('%d %B %Y at %H:%M:%S UTC') }} &bull; 
+                <i class="fa-solid fa-map-location-dot"></i> GPS: {{ incident.latitude }}, {{ incident.longitude }} ({{ incident.postcode }})
+            </div>
+        </div>
+    </div>
+
+    <!-- Crash Sensor Telemetry Metrics -->
+    <div class="kpi-grid" style="margin-bottom: 2rem;">
+        <div class="kpi-card" style="background: rgba(255,255,255,0.03);">
+            <div class="kpi-header">
+                <span class="kpi-title">Peak Impact Force</span>
+                <i class="fa-solid fa-gauge-high" style="color: var(--cyber-cyan);"></i>
+            </div>
+            <div class="kpi-value" style="color: {% if incident.g_force >= 8 %}var(--emergency-red){% else %}var(--text-primary){% endif %};">
+                {{ incident.g_force }} G
+            </div>
+            <div class="kpi-sub">Tri-axial accelerometer telemetry</div>
+        </div>
+
+        <div class="kpi-card" style="background: rgba(255,255,255,0.03);">
+            <div class="kpi-header">
+                <span class="kpi-title">Impact Velocity</span>
+                <i class="fa-solid fa-tachograph-digital" style="color: var(--warning-amber);"></i>
+            </div>
+            <div class="kpi-value">{{ incident.impact_speed_mph }} <span style="font-size: 1rem;">mph</span></div>
+            <div class="kpi-sub">Pre-impact GPS speed vector</div>
+        </div>
+
+        <div class="kpi-card" style="background: rgba(255,255,255,0.03);">
+            <div class="kpi-header">
+                <span class="kpi-title">Airbag Deployment</span>
+                <i class="fa-solid fa-shield-virus" style="color: {% if incident.airbag_deployed %}var(--emergency-red){% else %}var(--text-muted){% endif %};"></i>
+            </div>
+            <div class="kpi-value" style="font-size: 1.5rem; padding-top: 0.35rem;">
+                {% if incident.airbag_deployed %}
+                    <span style="color: var(--emergency-red);"><i class="fa-solid fa-circle-check"></i> DEPLOYED</span>
+                {% else %}
+                    <span style="color: var(--text-muted);">INACTIVATE</span>
+                {% endif %}
+            </div>
+            <div class="kpi-sub">ECU CAN-bus confirmation</div>
+        </div>
+
+        <div class="kpi-card" style="background: rgba(255,255,255,0.03);">
+            <div class="kpi-header">
+                <span class="kpi-title">Vehicle Rollover</span>
+                <i class="fa-solid fa-arrows-spin" style="color: {% if incident.rollover_detected %}var(--emergency-red){% else %}var(--text-muted){% endif %};"></i>
+            </div>
+            <div class="kpi-value" style="font-size: 1.5rem; padding-top: 0.35rem;">
+                {% if incident.rollover_detected %}
+                    <span style="color: var(--emergency-red);"><i class="fa-solid fa-triangle-exclamation"></i> DETECTED</span>
+                {% else %}
+                    <span style="color: var(--nhs-green);"><i class="fa-solid fa-circle-check"></i> UPRIGHT</span>
+                {% endif %}
+            </div>
+            <div class="kpi-sub">Gyroscope tilt sensor</div>
+        </div>
+    </div>
+
+    <!-- Detail Splits: Vehicle info, Dispatches & Actions -->
+    <div class="dashboard-split">
+        <!-- Vehicle & Crash Diagnostics -->
+        <div>
+            <h3 style="font-size: 1.1rem; margin-bottom: 1rem; color: var(--cyber-cyan);">
+                <i class="fa-solid fa-car"></i> Vehicle Registry & Crash Forensic
+            </h3>
+            
+            {% if incident.vehicle %}
+            <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-card); border-radius: var(--radius-md); padding: 1.25rem; margin-bottom: 1.5rem;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; font-size: 0.88rem;">
+                    <div>
+                        <span style="color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase;">Vehicle</span>
+                        <div style="font-weight: 700;">{{ incident.vehicle.year }} {{ incident.vehicle.make }} {{ incident.vehicle.model }}</div>
+                    </div>
+                    <div>
+                        <span style="color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase;">UK Registration Plate</span>
+                        <div style="font-weight: 700; color: var(--cyber-cyan);">{{ incident.vehicle.license_plate }}</div>
+                    </div>
+                    <div>
+                        <span style="color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase;">VIN</span>
+                        <div style="font-family: monospace;">{{ incident.vehicle.vin }}</div>
+                    </div>
+                    <div>
+                        <span style="color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase;">IoT Hardware Box</span>
+                        <div>{{ incident.vehicle.iot_device_id }} (Firmware {{ incident.vehicle.firmware_version }})</div>
+                    </div>
+                    <div>
+                        <span style="color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase;">Registered Driver</span>
+                        <div>{{ incident.vehicle.owner_name }}</div>
+                    </div>
+                    <div>
+                        <span style="color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase;">Emergency ICE Contact</span>
+                        <div style="color: var(--emergency-red); font-weight: 600;">
+                            <i class="fa-solid fa-phone"></i> {{ incident.vehicle.emergency_contact_phone }} ({{ incident.vehicle.emergency_contact_name }})
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Azure Blob Storage Evidence -->
+            <h3 style="font-size: 1.1rem; margin-bottom: 1rem; color: var(--azure-blue);">
+                <i class="fa-solid fa-cloud-arrow-up"></i> Azure Blob Storage Evidence Container
+            </h3>
+            <div style="background: rgba(0, 120, 212, 0.06); border: 1px solid rgba(0, 120, 212, 0.2); border-radius: var(--radius-md); padding: 1.25rem;">
+                <div style="font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 0.5rem;">
+                    <strong>Container:</strong> <code>crash-evidence</code> &bull; <strong>TLS Version:</strong> 1.2 Encrypted
+                </div>
+                <div style="font-size: 0.85rem; color: var(--text-muted);">
+                    <i class="fa-solid fa-file-video"></i> Telemetry Blackbox Dump: <code>telemetry_{{ incident.reference_id }}.json.gz</code>
+                </div>
+                <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">
+                    <i class="fa-solid fa-image"></i> Onboard Dashcam Capture: <code>snapshot_front_{{ incident.reference_id }}.jpg</code>
+                </div>
+            </div>
+        </div>
+
+        <!-- UK 999 Dispatches and Emergency Command -->
+        <div>
+            <h3 style="font-size: 1.1rem; margin-bottom: 1rem; color: var(--nhs-green);">
+                <i class="fa-solid fa-truck-medical"></i> UK Emergency Dispatches
+            </h3>
+
+            <div style="display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1.5rem;">
+                {% for d in incident.dispatches %}
+                <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-card); border-radius: var(--radius-sm); padding: 1rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <strong style="color: var(--cyber-cyan);">{{ d.unit.unit_code }}</strong>
+                        <span class="badge badge-dispatched">{{ d.status }}</span>
+                    </div>
+                    <div style="font-size: 0.82rem; color: var(--text-secondary); margin-top: 0.25rem;">
+                        {{ d.unit.service_type }} &bull; {{ d.unit.station_name }}
+                    </div>
+                    <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.35rem;">
+                        <i class="fa-solid fa-clock"></i> Dispatched: {{ d.dispatched_at.strftime('%H:%M:%S UTC') }} &bull; 
+                        <strong style="color: var(--nhs-green);">ETA: {{ d.estimated_arrival_minutes }} mins</strong>
+                    </div>
+                    {% if d.notes %}
+                    <div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.35rem; font-style: italic;">
+                        "{{ d.notes }}"
+                    </div>
+                    {% endif %}
+                </div>
+                {% else %}
+                <div style="background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: var(--radius-sm); padding: 1.25rem; text-align: center;">
+                    <div style="color: var(--emergency-red); font-weight: 600; font-size: 0.9rem;">
+                        <i class="fa-solid fa-triangle-exclamation"></i> No Emergency Units Dispatched Yet
+                    </div>
+                    <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.25rem;">
+                        Manual operator authorization or automatic trigger required.
+                    </p>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Manual Dispatch Form -->
+            <div class="glass-panel" style="padding: 1.25rem; background: rgba(18, 24, 38, 0.95);">
+                <h4 style="font-size: 0.95rem; margin-bottom: 0.75rem; color: var(--text-primary);">
+                    <i class="fa-solid fa-tower-broadcast"></i> Dispatch Additional Units
+                </h4>
+                <form method="POST" action="{{ url_for('web.manual_dispatch', incident_id=incident.id) }}">
+                    <div class="form-group">
+                        <label class="form-label">Operator Notes / Specific Dispatch Instructions</label>
+                        <input type="text" name="notes" class="form-control" placeholder="e.g. Request Air Ambulance / Hazardous Area Team" value="Priority dispatch to {{ incident.location_name }}">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">
+                        <i class="fa-solid fa-paper-plane"></i> Authorize & Dispatch Nearest Units
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

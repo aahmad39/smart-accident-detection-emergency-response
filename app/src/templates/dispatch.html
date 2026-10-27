@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block title %}Emergency 999 CAD Dispatch - Smart Accident Response (UK){% endblock %}
+
+{% block content %}
+<div class="glass-panel">
+    <div class="panel-header">
+        <div>
+            <h1 class="panel-title">
+                <i class="fa-solid fa-truck-medical" style="color: var(--nhs-green);"></i>
+                <span>UK Emergency Response Units (999 CAD Integration)</span>
+            </h1>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">
+                Live operational status of London Ambulance Service (LAS), Met Police, London Fire Brigade (LFB), and regional NHS trusts.
+            </p>
+        </div>
+    </div>
+
+    <!-- Active Dispatches Live Section -->
+    <h3 style="font-size: 1.1rem; margin-bottom: 1rem; color: var(--cyber-cyan);">
+        <i class="fa-solid fa-route"></i> Active Emergency Missions In Progress
+    </h3>
+
+    <div class="data-table-wrapper" style="margin-bottom: 2.5rem;">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Mission ID</th>
+                    <th>Incident CAD Ref</th>
+                    <th>Assigned Responder Unit</th>
+                    <th>Service Type</th>
+                    <th>Dispatched At</th>
+                    <th>Estimated Arrival</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for d in dispatches %}
+                <tr>
+                    <td><strong>#MIS-{{ d.id }}</strong></td>
+                    <td>
+                        <a href="{{ url_for('web.incident_detail', incident_id=d.incident_id) }}" style="color: var(--cyber-cyan); text-decoration: none; font-weight: 600;">
+                            {{ d.incident.reference_id }} &rarr;
+                        </a>
+                        <div style="font-size: 0.72rem; color: var(--text-muted);">{{ d.incident.location_name }}</div>
+                    </td>
+                    <td>
+                        <strong style="color: var(--text-primary);">{{ d.unit.unit_code }}</strong>
+                        <div style="font-size: 0.72rem; color: var(--text-secondary);">{{ d.unit.station_name }}</div>
+                    </td>
+                    <td>{{ d.unit.service_type }}</td>
+                    <td>{{ d.dispatched_at.strftime('%H:%M:%S UTC') }}</td>
+                    <td>
+                        <strong style="color: var(--nhs-green); font-size: 0.95rem;">{{ d.estimated_arrival_minutes }} mins</strong>
+                    </td>
+                    <td>
+                        <span class="badge badge-dispatched">{{ d.status }}</span>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="7" style="text-align: center; padding: 2rem; color: var(--text-muted);">
+                        No active dispatch missions currently ongoing.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Emergency Fleet Units Status -->
+    <h3 style="font-size: 1.1rem; margin-bottom: 1rem; color: var(--text-primary);">
+        <i class="fa-solid fa-shield-halved"></i> UK Responder Fleet Readiness
+    </h3>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.25rem;">
+        {% for u in units %}
+        <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-card); border-radius: var(--radius-md); padding: 1.25rem; transition: var(--transition);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                <strong style="font-size: 1rem; color: var(--cyber-cyan);">{{ u.unit_code }}</strong>
+                <span class="badge {% if u.status == 'Available' %}badge-dispatched{% elif u.status == 'En Route' %}badge-critical{% else %}badge-status{% endif %}">
+                    {{ u.status }}
+                </span>
+            </div>
+
+            <div style="font-size: 0.88rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.35rem;">
+                {{ u.service_type }}
+            </div>
+            <div style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.75rem;">
+                <i class="fa-solid fa-hospital"></i> {{ u.station_name }} ({{ u.base_city }})
+            </div>
+
+            <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted); border-top: 1px solid var(--border-card); padding-top: 0.65rem;">
+                <span><i class="fa-solid fa-users"></i> Crew: {{ u.crew_size }}</span>
+                <span><i class="fa-solid fa-walkie-talkie"></i> {{ u.contact_radio }}</span>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

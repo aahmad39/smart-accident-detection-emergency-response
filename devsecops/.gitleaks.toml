@@ -1,0 +1,27 @@
+# Gitleaks Configuration: DevSecOps Secret Scanning Rule Set
+title = "Smart Accident Response Secret Detection Rules"
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "azure-connection-string"
+description = "Detected potential Azure Storage or Database Connection String"
+regex = '''(?i)(DefaultEndpointsProtocol|AccountKey|Server=tcp:|Uid=)[^\s;]{10,}'''
+keywords = ["DefaultEndpointsProtocol", "AccountKey", "Server=tcp", "Uid="]
+secretGroup = 0
+
+[[rules]]
+id = "azure-openai-key"
+description = "Detected potential Azure OpenAI API Key"
+regex = '''(?i)(openai[_-]?api[_-]?key|azure_openai_key)[\s]*[=:][\s]*['"][a-zA-Z0-9]{32}['"]'''
+keywords = ["openai", "azure_openai_key"]
+
+[allowlist]
+description = "Allow dummy strings in testing and documentation"
+paths = [
+  '''app/tests/.*''',
+  '''terraform/tests/.*''',
+  '''\.env\.example''',
+  '''README\.md'''
+]

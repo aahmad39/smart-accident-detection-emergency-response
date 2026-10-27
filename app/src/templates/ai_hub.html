@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+
+{% block title %}Azure OpenAI AI Agents Hub - Smart Accident Response (UK){% endblock %}
+
+{% block content %}
+<div class="glass-panel">
+    <div class="panel-header">
+        <div>
+            <h1 class="panel-title">
+                <i class="fa-solid fa-brain" style="color: var(--cyber-cyan);"></i>
+                <span>Azure OpenAI AI Agents Control Room</span>
+            </h1>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">
+                Autonomous DevSecOps & Cloud Operations Agents powered by Azure OpenAI Service (GPT-4o).
+            </p>
+        </div>
+        <span class="badge" style="background: rgba(0, 210, 255, 0.15); color: var(--cyber-cyan); font-size: 0.82rem; padding: 0.45rem 0.95rem;">
+            <i class="fa-solid fa-sparkles"></i> 5 AI Agents Active
+        </span>
+    </div>
+
+    <!-- Agent Quick Selector Cards -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+        <div class="ai-agent-card" onclick="runAgent('risk')" style="cursor: pointer;">
+            <div class="ai-agent-header">
+                <i class="fa-solid fa-triangle-exclamation" style="color: var(--warning-amber); font-size: 1.25rem;"></i>
+                <div>
+                    <strong>Risk Agent</strong>
+                    <div style="font-size: 0.72rem; color: var(--text-muted);">IaC & Architecture Risk</div>
+                </div>
+            </div>
+            <p style="font-size: 0.78rem; color: var(--text-secondary);">Identifies potential architectural risks and resilience gaps in Terraform.</p>
+        </div>
+
+        <div class="ai-agent-card" onclick="runAgent('security')" style="cursor: pointer;">
+            <div class="ai-agent-header">
+                <i class="fa-solid fa-shield-halved" style="color: var(--nhs-green); font-size: 1.25rem;"></i>
+                <div>
+                    <strong>Security Agent</strong>
+                    <div style="font-size: 0.72rem; color: var(--text-muted);">Vulnerability Scanner</div>
+                </div>
+            </div>
+            <p style="font-size: 0.78rem; color: var(--text-secondary);">Detects cloud misconfigurations, CIS benchmarks & secrets in pipeline.</p>
+        </div>
+
+        <div class="ai-agent-card" onclick="runAgent('pr-review')" style="cursor: pointer;">
+            <div class="ai-agent-header">
+                <i class="fa-solid fa-code-pull-request" style="color: var(--police-blue); font-size: 1.25rem;"></i>
+                <div>
+                    <strong>PR Review Agent</strong>
+                    <div style="font-size: 0.72rem; color: var(--text-muted);">Automated Code Review</div>
+                </div>
+            </div>
+            <p style="font-size: 0.78rem; color: var(--text-secondary);">Reviews GitHub PRs and posts contextual feedback and security suggestions.</p>
+        </div>
+
+        <div class="ai-agent-card" onclick="runAgent('post-deploy')" style="cursor: pointer;">
+            <div class="ai-agent-header">
+                <i class="fa-solid fa-circle-check" style="color: var(--cyber-cyan); font-size: 1.25rem;"></i>
+                <div>
+                    <strong>Post-Deploy Agent</strong>
+                    <div style="font-size: 0.72rem; color: var(--text-muted);">Validation & Smoke Tests</div>
+                </div>
+            </div>
+            <p style="font-size: 0.78rem; color: var(--text-secondary);">Verifies deployed infrastructure health, API latency and database probe.</p>
+        </div>
+
+        <div class="ai-agent-card" onclick="runAgent('rca')" style="cursor: pointer;">
+            <div class="ai-agent-header">
+                <i class="fa-solid fa-magnifying-glass-chart" style="color: var(--emergency-red); font-size: 1.25rem;"></i>
+                <div>
+                    <strong>RCA Agent</strong>
+                    <div style="font-size: 0.72rem; color: var(--text-muted);">Root Cause Analysis</div>
+                </div>
+            </div>
+            <p style="font-size: 0.78rem; color: var(--text-secondary);">Diagnoses production crash telemetry exceptions and provides instant fixes.</p>
+        </div>
+    </div>
+
+    <!-- Interactive Execution Console -->
+    <div class="glass-panel" style="background: rgba(10, 14, 23, 0.95); border-color: rgba(0, 210, 255, 0.25);">
+        <div class="panel-header">
+            <div class="panel-title">
+                <i class="fa-solid fa-terminal" style="color: var(--cyber-cyan);"></i>
+                <span id="active-agent-title">Risk Agent Interactive Execution Console</span>
+            </div>
+            <button id="btn-run-agent" class="btn btn-primary" onclick="executeCurrentAgent()">
+                <i class="fa-solid fa-play"></i> Run Agent Analysis
+            </button>
+        </div>
+
+        <div style="margin-bottom: 1.25rem;">
+            <label class="form-label" id="agent-input-label">Terraform IaC or Code Snippet to Analyze</label>
+            <textarea id="agent-input-text" class="form-control" rows="5" style="font-family: monospace; font-size: 0.85rem;">
+resource "azurerm_storage_account" "evidence" {
+  name                     = "crashblobs2026"
+  resource_group_name      = "rg-accident-prod"
+  location                 = "uksouth"
+  account_tier             = "Standard"
+  account_replication_type = "LRS"
+  enable_https_traffic_only = true
+  min_tls_version          = "TLS1_2"
+}
+            </textarea>
+        </div>
+
+        <label class="form-label">Agent Output & Reasoning Report</label>
+        <div id="agent-output" style="background: #060911; border: 1px solid var(--border-card); border-radius: var(--radius-sm); padding: 1.25rem; font-family: monospace; font-size: 0.88rem; min-height: 220px; white-space: pre-wrap; color: #e2e8f0;">
+// Select an agent above or click "Run Agent Analysis" to invoke Azure OpenAI...
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts_extra %}
+<script>
+let currentAgentType = 'risk';
+
+function runAgent(type) {
+    currentAgentType = type;
+    const titleEl = document.getElementById('active-agent-title');
+    const labelEl = document.getElementById('agent-input-label');
+    const inputEl = document.getElementById('agent-input-text');
+
+    if (type === 'risk') {
+        titleEl.innerText = 'Risk Agent (IaC & Architecture Risk Analysis)';
+        labelEl.innerText = 'Terraform IaC Snippet';
+        inputEl.value = `resource "azurerm_storage_account" "evidence" {\n  name                     = "crashblobs2026"\n  resource_group_name      = "rg-accident-prod"\n  location                 = "uksouth"\n  account_tier             = "Standard"\n  account_replication_type = "LRS"\n  enable_https_traffic_only = true\n  min_tls_version          = "TLS1_2"\n}`;
+    } else if (type === 'security') {
+        titleEl.innerText = 'Security Agent (CIS Benchmark & Vulnerability Scanner)';
+        labelEl.innerText = 'Target Scope for Security Audit';
+        inputEl.value = `Azure UK South Infrastructure: Virtual Network, NSGs, Azure SQL Firewall, App Service TLS 1.2, Key Vault Managed Identity`;
+    } else if (type === 'pr-review') {
+        titleEl.innerText = 'PR Review Agent (Automated Code & PR Review)';
+        labelEl.innerText = 'Git Pull Request Code Diff';
+        inputEl.value = `+ def process_crash_alert(telemetry):\n+     severity, casualties = AccidentDetectionEngine.calculate_crash_severity(telemetry['g_force'])\n+     db.session.execute("SELECT * FROM incidents WHERE ref = :r", {'r': telemetry['ref']})\n+     return True`;
+    } else if (type === 'post-deploy') {
+        titleEl.innerText = 'Post-Deployment Validation Agent';
+        labelEl.innerText = 'Deployment Context';
+        inputEl.value = `Production Release v2.4.0 in Azure UK South (App Service + Azure SQL hrdb + Azure Key Vault + App Insights)`;
+    } else if (type === 'rca') {
+        titleEl.innerText = 'RCA Agent (Root Cause Analysis)';
+        labelEl.innerText = 'Application Error Log / Exception Stack Trace';
+        inputEl.value = `sqlalchemy.exc.TimeoutError: QueuePool limit of size 5 overflow 10 reached, connection timed out, timeout 30.00 (Background: vehicle telemetry surge 120req/sec)`;
+    }
+
+    executeCurrentAgent();
+}
+
+async function executeCurrentAgent() {
+    const outputEl = document.getElementById('agent-output');
+    const btn = document.getElementById('btn-run-agent');
+    const inputText = document.getElementById('agent-input-text').value;
+
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Analyzing...';
+    outputEl.innerText = `// Contacting Azure OpenAI (${currentAgentType} agent)...\n// Processing cloud heuristics and security models...`;
+
+    try {
+        let endpoint = `/api/v1/ai/${currentAgentType}-agent`;
+        if (currentAgentType === 'risk') endpoint = '/api/v1/ai/risk-agent';
+        if (currentAgentType === 'security') endpoint = '/api/v1/ai/security-agent';
+        if (currentAgentType === 'pr-review') endpoint = '/api/v1/ai/pr-review-agent';
+        if (currentAgentType === 'post-deploy') endpoint = '/api/v1/ai/post-deploy-agent';
+        if (currentAgentType === 'rca') endpoint = '/api/v1/ai/rca-agent';
+
+        let bodyPayload = {};
+        if (currentAgentType === 'risk') bodyPayload = { content: inputText };
+        else if (currentAgentType === 'security') bodyPayload = { target: inputText };
+        else if (currentAgentType === 'pr-review') bodyPayload = { diff: inputText };
+        else if (currentAgentType === 'rca') bodyPayload = { error_log: inputText };
+
+        const resp = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(bodyPayload)
+        });
+
+        const data = await resp.json();
+        const resultText = data.analysis || data.audit || data.review || data.report || data.rca || JSON.stringify(data, null, 2);
+        outputEl.innerText = resultText;
+    } catch (err) {
+        outputEl.innerText = `Error running AI agent: ${err.message}`;
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-play"></i> Run Agent Analysis';
+    }
+}
+</script>
+{% endblock %}

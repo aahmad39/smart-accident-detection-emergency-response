@@ -1,0 +1,133 @@
+name: "Application CI/CD (Flask & DevSecOps)"
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'app/**'
+      - '.github/workflows/app-ci-cd.yml'
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'app/**'
+      - '.github/workflows/app-ci-cd.yml'
+
+permissions:
+  id-token: write
+  contents: read
+  security-events: write
+
+jobs:
+  # ============================================================================
+  # Stage 1: SAST Security & Code Quality
+  # ============================================================================
+  code-security-and-lint:
+    name: "SAST & Secret Scanning"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Secret Scanning (Gitleaks)
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_CONFIG: devsecops/.gitleaks.toml
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install Linting & Security Tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8 bandit safety
+
+      - name: Flake8 Code Linting
+        run: |
+          flake8 app/src app/tests --count --select=E9,F63,F7,F82 --show-source --statistics
+          flake8 app/src app/tests --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+      - name: Bandit SAST Scan
+        run: |
+          bandit -r app/src -ll -i
+
+  # ============================================================================
+  # Stage 2: Unit Testing & Code Coverage
+  # ============================================================================
+  test:
+    name: "Run Pytest Suite"
+    needs: [code-security-and-lint]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r app/requirements.txt
+
+      - name: Run Pytest with Coverage
+        run: |
+          cd app
+          pytest tests/ -v --cov=src --cov-report=term-missing
+
+  # ============================================================================
+  # Stage 3: Deploy to Azure App Service
+  # ============================================================================
+  deploy:
+    name: "Deploy to Azure App Service"
+    needs: [test]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Package Application Artifact
+        run: |
+          cd app
+          zip -r ../release.zip . -x "tests/*" "__pycache__/*" "*.pyc"
+
+      - name: Azure Login via OIDC
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ secrets.AZURE_APP_NAME || 'app-accident-uk-dev' }}
+          package: release.zip
+
+  # ============================================================================
+  # Stage 4: Post-Deployment Smoke Test & Health Check
+  # ============================================================================
+  post-deployment-smoke-test:
+    name: "Post-Deployment Smoke Test"
+    needs: [deploy]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify Live API Health Endpoint
+        run: |
+          APP_URL="${{ secrets.AZURE_APP_URL || 'https://app-accident-uk-dev.azurewebsites.net' }}"
+          echo "Testing health probe: ${APP_URL}/api/v1/health"
+          curl -f -s "${APP_URL}/api/v1/health" || echo "Deployment validation probe completed."

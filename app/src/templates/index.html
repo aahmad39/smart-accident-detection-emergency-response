@@ -1,0 +1,223 @@
+{% extends "base.html" %}
+
+{% block title %}Operations Dashboard - Smart Accident Detection (UK){% endblock %}
+
+{% block content %}
+<!-- KPI Metrics Row -->
+<div class="kpi-grid">
+    <div class="kpi-card">
+        <div class="kpi-header">
+            <span class="kpi-title">Total Incidents Ingested</span>
+            <div class="kpi-icon" style="background: rgba(0, 210, 255, 0.15); color: var(--cyber-cyan);">
+                <i class="fa-solid fa-car-burst"></i>
+            </div>
+        </div>
+        <div class="kpi-value" id="kpi-total-incidents">{{ total_incidents }}</div>
+        <div class="kpi-sub"><i class="fa-solid fa-cloud-arrow-up"></i> Connected to IoT vehicle telemetry</div>
+    </div>
+
+    <div class="kpi-card" style="border-color: rgba(239, 68, 68, 0.3);">
+        <div class="kpi-header">
+            <span class="kpi-title">Active Critical / High</span>
+            <div class="kpi-icon" style="background: rgba(239, 68, 68, 0.15); color: var(--emergency-red);">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+        </div>
+        <div class="kpi-value" style="color: var(--emergency-red);" id="kpi-critical-incidents">{{ active_critical }}</div>
+        <div class="kpi-sub"><i class="fa-solid fa-fire-flame-curved"></i> High G-force or rollover confirmed</div>
+    </div>
+
+    <div class="kpi-card">
+        <div class="kpi-header">
+            <span class="kpi-title">Units Dispatched (999 CAD)</span>
+            <div class="kpi-icon" style="background: rgba(16, 185, 129, 0.15); color: var(--nhs-green);">
+                <i class="fa-solid fa-truck-medical"></i>
+            </div>
+        </div>
+        <div class="kpi-value" style="color: var(--nhs-green);" id="kpi-dispatched-units">{{ dispatched_units }}</div>
+        <div class="kpi-sub"><i class="fa-solid fa-route"></i> NHS Ambulance & Police en route</div>
+    </div>
+
+    <div class="kpi-card">
+        <div class="kpi-header">
+            <span class="kpi-title">Monitored Fleet Vehicles</span>
+            <div class="kpi-icon" style="background: rgba(59, 130, 246, 0.15); color: var(--police-blue);">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
+        </div>
+        <div class="kpi-value">{{ total_vehicles }}</div>
+        <div class="kpi-sub"><i class="fa-solid fa-microchip"></i> Real-time accelerometer stream</div>
+    </div>
+</div>
+
+<!-- Main Split: Live Radar & Active Incidents -->
+<div class="dashboard-split">
+    <!-- Left Main Column: Live Collisions -->
+    <div>
+        <div class="glass-panel">
+            <div class="panel-header">
+                <div class="panel-title">
+                    <i class="fa-solid fa-triangle-exclamation" style="color: var(--emergency-red);"></i>
+                    <span>Real-Time Ingested Accidents</span>
+                </div>
+                <a href="{{ url_for('web.incidents') }}" class="btn btn-outline" style="font-size: 0.78rem; padding: 0.4rem 0.8rem;">
+                    View All Incidents &rarr;
+                </a>
+            </div>
+
+            <div class="data-table-wrapper">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>CAD Ref</th>
+                            <th>Location / Postcode</th>
+                            <th>Severity</th>
+                            <th>G-Force</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="incidents-table-body">
+                        {% for incident in recent_incidents %}
+                        <tr>
+                            <td>
+                                <strong style="color: var(--cyber-cyan);">{{ incident.reference_id }}</strong>
+                                <div style="font-size: 0.72rem; color: var(--text-muted);">{{ incident.timestamp.strftime('%H:%M:%S UTC') }}</div>
+                            </td>
+                            <td>
+                                <div>{{ incident.location_name }}</div>
+                                <div style="font-size: 0.75rem; color: var(--text-secondary);"><i class="fa-solid fa-location-dot"></i> {{ incident.postcode }}</div>
+                            </td>
+                            <td>
+                                <span class="badge badge-{{ incident.severity.lower() }}">
+                                    {{ incident.severity }}
+                                </span>
+                            </td>
+                            <td>
+                                <strong>{{ incident.g_force }} G</strong>
+                                <div style="font-size: 0.72rem; color: var(--text-muted);">{{ incident.impact_speed_mph }} mph</div>
+                            </td>
+                            <td>
+                                <span class="badge {% if incident.status == 'Dispatched' %}badge-dispatched{% else %}badge-status{% endif %}">
+                                    {{ incident.status }}
+                                </span>
+                            </td>
+                            <td>
+                                <a href="{{ url_for('web.incident_detail', incident_id=incident.id) }}" class="btn btn-outline" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;">
+                                    Telemetry
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- UK Highway Radar Visualization -->
+        <div class="glass-panel">
+            <div class="panel-header">
+                <div class="panel-title">
+                    <i class="fa-solid fa-satellite" style="color: var(--cyber-cyan);"></i>
+                    <span>Live Incident Radar - UK Highway Sector</span>
+                </div>
+                <span style="font-size: 0.75rem; color: var(--text-muted);"><i class="fa-solid fa-circle-dot" style="color: var(--nhs-green);"></i> GPS Synchronized</span>
+            </div>
+
+            <div class="uk-radar-box">
+                <div class="radar-grid"></div>
+                <div class="radar-circle" style="width: 140px; height: 140px;"></div>
+                <div class="radar-circle" style="width: 260px; height: 260px;"></div>
+                <div class="radar-circle" style="width: 360px; height: 360px;"></div>
+                <div class="radar-sweep"></div>
+
+                <!-- Animated Points on Radar -->
+                <div class="map-point" style="top: 38%; left: 45%;" title="M25 J14 Heathrow Collision"></div>
+                <div class="map-point" style="top: 48%; left: 58%; background: var(--warning-amber); box-shadow: 0 0 15px var(--warning-amber);" title="A40 Acton Collision"></div>
+                <div class="map-point" style="top: 25%; left: 35%; background: var(--police-blue); box-shadow: 0 0 15px var(--police-blue);" title="M1 J6 Watford Shunt"></div>
+
+                <div style="position: absolute; bottom: 12px; left: 16px; font-size: 0.72rem; color: var(--text-muted); z-index: 5;">
+                    <i class="fa-solid fa-crosshairs"></i> Lat: 51.5074° N, Lon: -0.1278° W (London Greater Area)
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Column: Dispatches & Cloud DevSecOps Status -->
+    <div>
+        <!-- Emergency Dispatch Feed -->
+        <div class="glass-panel">
+            <div class="panel-header">
+                <div class="panel-title">
+                    <i class="fa-solid fa-truck-medical" style="color: var(--nhs-green);"></i>
+                    <span>UK 999 CAD Dispatches</span>
+                </div>
+                <a href="{{ url_for('web.dispatch_center') }}" class="btn btn-outline" style="font-size: 0.75rem; padding: 0.35rem 0.7rem;">
+                    Manage
+                </a>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 0.85rem;">
+                {% for d in recent_dispatches %}
+                <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-card); border-radius: var(--radius-sm); padding: 0.85rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+                        <strong style="font-size: 0.85rem; color: var(--cyber-cyan);">{{ d.unit.unit_code }}</strong>
+                        <span class="badge badge-dispatched" style="font-size: 0.68rem;">{{ d.status }}</span>
+                    </div>
+                    <div style="font-size: 0.78rem; color: var(--text-secondary);">
+                        {{ d.unit.service_type }} &bull; {{ d.unit.station_name }}
+                    </div>
+                    <div style="font-size: 0.72rem; color: var(--nhs-green); margin-top: 0.35rem;">
+                        <i class="fa-solid fa-clock"></i> ETA: {{ d.estimated_arrival_minutes }} mins
+                    </div>
+                </div>
+                {% else %}
+                <div style="color: var(--text-muted); font-size: 0.85rem; text-align: center; padding: 1.5rem 0;">
+                    No active dispatches currently en route.
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- DevSecOps & Azure Infrastructure Status Card -->
+        <div class="glass-panel">
+            <div class="panel-header">
+                <div class="panel-title">
+                    <i class="fa-brands fa-microsoft" style="color: var(--azure-blue);"></i>
+                    <span>Azure & DevSecOps Layer</span>
+                </div>
+                <span class="badge" style="background: rgba(16, 185, 129, 0.2); color: #34d399;">100% SECURE</span>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.82rem;">
+                <div style="display: flex; justify-content: space-between; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-card);">
+                    <span style="color: var(--text-secondary);"><i class="fa-solid fa-network-wired"></i> Virtual Network</span>
+                    <span style="color: var(--text-primary); font-weight: 600;">vnet-accident-prod (uksouth)</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-card);">
+                    <span style="color: var(--text-secondary);"><i class="fa-solid fa-database"></i> Azure SQL (Tier 3)</span>
+                    <span style="color: var(--nhs-green); font-weight: 600;"><i class="fa-solid fa-shield-halved"></i> Private Endpoint</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-card);">
+                    <span style="color: var(--text-secondary);"><i class="fa-solid fa-key"></i> Azure Key Vault</span>
+                    <span style="color: var(--nhs-green); font-weight: 600;">Managed Identity RBAC</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-card);">
+                    <span style="color: var(--text-secondary);"><i class="fa-solid fa-box-archive"></i> Blob Storage</span>
+                    <span style="color: var(--text-primary); font-weight: 600;">crash-evidence (TLS 1.2)</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span style="color: var(--text-secondary);"><i class="fa-solid fa-chart-pie"></i> FinOps Optimization</span>
+                    <span style="color: var(--cyber-cyan); font-weight: 600;">25% Cost Saved</span>
+                </div>
+            </div>
+
+            <div style="margin-top: 1.25rem;">
+                <a href="{{ url_for('web.ai_hub') }}" class="btn btn-primary" style="width: 100%; justify-content: center; font-size: 0.82rem;">
+                    <i class="fa-solid fa-brain"></i> Open AI Agents Control Room
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

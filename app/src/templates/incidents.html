@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% block title %}Incident Registry - Smart Accident Detection (UK){% endblock %}
+
+{% block content %}
+<div class="glass-panel">
+    <div class="panel-header">
+        <div>
+            <h1 class="panel-title">
+                <i class="fa-solid fa-triangle-exclamation" style="color: var(--emergency-red);"></i>
+                <span>UK Emergency Road Incident Registry</span>
+            </h1>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">
+                National crash feed tracking IoT vehicle telematics and emergency responder dispatches.
+            </p>
+        </div>
+
+        <div style="display: flex; gap: 0.75rem; align-items: center;">
+            <a href="{{ url_for('web.simulator') }}" class="btn btn-primary" style="font-size: 0.82rem;">
+                <i class="fa-solid fa-plus"></i> Simulate Crash
+            </a>
+        </div>
+    </div>
+
+    <!-- Filters Bar -->
+    <form method="GET" action="{{ url_for('web.incidents') }}" style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+        <select name="severity" class="form-control" style="width: auto; min-width: 170px;" onchange="this.form.submit()">
+            <option value="">All Severities</option>
+            <option value="Critical" {% if selected_severity == 'Critical' %}selected{% endif %}>Critical</option>
+            <option value="High" {% if selected_severity == 'High' %}selected{% endif %}>High</option>
+            <option value="Medium" {% if selected_severity == 'Medium' %}selected{% endif %}>Medium</option>
+            <option value="Minor" {% if selected_severity == 'Minor' %}selected{% endif %}>Minor</option>
+        </select>
+
+        <select name="status" class="form-control" style="width: auto; min-width: 170px;" onchange="this.form.submit()">
+            <option value="">All Statuses</option>
+            <option value="Detected" {% if selected_status == 'Detected' %}selected{% endif %}>Detected</option>
+            <option value="Dispatched" {% if selected_status == 'Dispatched' %}selected{% endif %}>Dispatched</option>
+            <option value="On-Scene" {% if selected_status == 'On-Scene' %}selected{% endif %}>On-Scene</option>
+            <option value="Resolved" {% if selected_status == 'Resolved' %}selected{% endif %}>Resolved</option>
+        </select>
+
+        {% if selected_severity or selected_status %}
+            <a href="{{ url_for('web.incidents') }}" class="btn btn-outline" style="font-size: 0.85rem;">Clear Filters</a>
+        {% endif %}
+    </form>
+
+    <div class="data-table-wrapper">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>CAD Reference</th>
+                    <th>Date / Time</th>
+                    <th>Location & Sector</th>
+                    <th>Vehicle</th>
+                    <th>Severity</th>
+                    <th>Impact G-Force</th>
+                    <th>Speed</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for inc in incidents %}
+                <tr>
+                    <td>
+                        <strong style="color: var(--cyber-cyan);">{{ inc.reference_id }}</strong>
+                    </td>
+                    <td>
+                        <div>{{ inc.timestamp.strftime('%d %b %Y') }}</div>
+                        <div style="font-size: 0.72rem; color: var(--text-muted);">{{ inc.timestamp.strftime('%H:%M:%S UTC') }}</div>
+                    </td>
+                    <td>
+                        <div style="font-weight: 600;">{{ inc.location_name }}</div>
+                        <div style="font-size: 0.75rem; color: var(--text-secondary);">
+                            <i class="fa-solid fa-map-pin"></i> {{ inc.postcode }} ({{ inc.latitude }}, {{ inc.longitude }})
+                        </div>
+                    </td>
+                    <td>
+                        {% if inc.vehicle %}
+                            <div>{{ inc.vehicle.make }} {{ inc.vehicle.model }}</div>
+                            <div style="font-size: 0.72rem; color: var(--text-muted);"><i class="fa-solid fa-id-card"></i> {{ inc.vehicle.license_plate }}</div>
+                        {% else %}
+                            <span style="color: var(--text-muted);">Unidentified</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <span class="badge badge-{{ inc.severity.lower() }}">{{ inc.severity }}</span>
+                    </td>
+                    <td>
+                        <strong style="color: {% if inc.g_force >= 8 %}var(--emergency-red){% else %}var(--cyber-cyan){% endif %};">
+                            {{ inc.g_force }} G
+                        </strong>
+                        {% if inc.rollover_detected %}
+                            <span class="badge badge-critical" style="font-size: 0.65rem; margin-left: 0.25rem;">ROLLOVER</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {{ inc.impact_speed_mph }} mph
+                    </td>
+                    <td>
+                        <span class="badge {% if inc.status == 'Dispatched' %}badge-dispatched{% elif inc.status == 'On-Scene' %}badge-high{% else %}badge-status{% endif %}">
+                            {{ inc.status }}
+                        </span>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('web.incident_detail', incident_id=inc.id) }}" class="btn btn-outline" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;">
+                            View Details
+                        </a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="9" style="text-align: center; padding: 2rem; color: var(--text-muted);">
+                        No incidents match the selected filter criteria.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+
+{% block title %}IoT Crash Simulator - Smart Accident Response (UK){% endblock %}
+
+{% block content %}
+<div class="glass-panel">
+    <div class="panel-header">
+        <div>
+            <h1 class="panel-title">
+                <i class="fa-solid fa-bolt" style="color: var(--emergency-red);"></i>
+                <span>Connected Vehicle IoT Crash & Telemetry Simulator</span>
+            </h1>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">
+                Simulate real-time high-G vehicular collisions to validate Azure ingestion, crash detection scoring, and automatic 999 CAD unit dispatch.
+            </p>
+        </div>
+        <span class="badge badge-critical" style="font-size: 0.8rem; padding: 0.45rem 0.85rem;">
+            LIVE SENSOR INJECTION MODE
+        </span>
+    </div>
+
+    <!-- Simulation Presets Row -->
+    <div style="margin-bottom: 2rem;">
+        <label class="form-label">Fast Presets (UK Road Scenarios)</label>
+        <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+            <button type="button" class="btn btn-outline" onclick="loadPreset('m25_rollover')">
+                <i class="fa-solid fa-car-burst" style="color: var(--emergency-red);"></i> M25 Rollover (Critical - 12.8G)
+            </button>
+            <button type="button" class="btn btn-outline" onclick="loadPreset('a40_tbone')">
+                <i class="fa-solid fa-triangle-exclamation" style="color: var(--warning-amber);"></i> A40 Acton T-Bone (High - 8.4G)
+            </button>
+            <button type="button" class="btn btn-outline" onclick="loadPreset('m1_shunt')">
+                <i class="fa-solid fa-shield-halved" style="color: var(--cyber-cyan);"></i> M1 Watford Shunt (Medium - 5.2G)
+            </button>
+            <button type="button" class="btn btn-outline" onclick="loadPreset('birmingham_scrape')">
+                <i class="fa-solid fa-wrench" style="color: var(--police-blue);"></i> Birmingham Barrier Scrape (Minor - 2.8G)
+            </button>
+        </div>
+    </div>
+
+    <form id="simulator-form" onsubmit="handleSimulate(event)">
+        <div class="dashboard-split">
+            <!-- Left: Telematics Parameters -->
+            <div>
+                <h3 style="font-size: 1.05rem; margin-bottom: 1.25rem; color: var(--cyber-cyan);">
+                    <i class="fa-solid fa-microchip"></i> Telemetry Sensor Data
+                </h3>
+
+                <div class="form-group">
+                    <label class="form-label">Target Vehicle</label>
+                    <select id="vehicle_id" class="form-control" required>
+                        {% for v in vehicles %}
+                        <option value="{{ v.id }}">{{ v.license_plate }} &bull; {{ v.year }} {{ v.make }} {{ v.model }} (Driver: {{ v.owner_name }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">UK Highway / Road Location</label>
+                    <input type="text" id="location_name" class="form-control" value="M25 Motorway Junction 14 near Heathrow Airport" required>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label class="form-label">UK Postcode</label>
+                        <input type="text" id="postcode" class="form-control" value="TW6 2AA" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Latitude</label>
+                        <input type="number" step="0.0001" id="latitude" class="form-control" value="51.4700" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Longitude</label>
+                        <input type="number" step="0.0001" id="longitude" class="form-control" value="-0.4543" required>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label class="form-label">Impact G-Force (<span id="g_force_val">11.8</span> G)</label>
+                        <input type="range" min="1.0" max="20.0" step="0.1" value="11.8" id="g_force" class="form-control" oninput="document.getElementById('g_force_val').innerText = this.value">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Impact Speed (<span id="speed_val">68</span> mph)</label>
+                        <input type="range" min="5" max="110" step="1" value="68" id="speed_mph" class="form-control" oninput="document.getElementById('speed_val').innerText = this.value">
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 0.5rem;">
+                    <div class="form-group">
+                        <label class="form-label">Collision Vector Angle</label>
+                        <select id="collision_angle" class="form-control">
+                            <option value="Frontal Head-On">Frontal Head-On</option>
+                            <option value="Multiple-Vehicle Pileup" selected>Multiple-Vehicle Pileup</option>
+                            <option value="Side-Impact T-Bone">Side-Impact T-Bone</option>
+                            <option value="Rear-End Collision">Rear-End Collision</option>
+                            <option value="Off-Road Rollover">Off-Road Rollover</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Safety Systems Status</label>
+                        <div style="display: flex; gap: 1.5rem; margin-top: 0.5rem;">
+                            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                <input type="checkbox" id="airbag_deployed" checked> Airbag Fired
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                <input type="checkbox" id="rollover_detected" checked> Rollover
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 1.5rem;">
+                    <button type="submit" id="btn-submit-sim" class="btn btn-danger" style="width: 100%; justify-content: center; padding: 0.85rem; font-size: 1rem;">
+                        <i class="fa-solid fa-satellite-dish"></i> Inject Telemetry & Trigger Emergency Response
+                    </button>
+                </div>
+            </div>
+
+            <!-- Right: Live Result Stream -->
+            <div>
+                <h3 style="font-size: 1.05rem; margin-bottom: 1.25rem; color: var(--nhs-green);">
+                    <i class="fa-solid fa-satellite"></i> Live Azure Ingestion Stream
+                </h3>
+
+                <div id="sim-result-box" style="background: #060911; border: 1px solid var(--border-card); border-radius: var(--radius-md); padding: 1.25rem; min-height: 380px; font-family: monospace; font-size: 0.85rem; color: #a5f3fc; overflow-y: auto;">
+                    <div style="color: var(--text-muted);">
+                        // Ready for IoT collision event injection...<br>
+                        // Click "Inject Telemetry" to simulate real-time vehicle accelerometer spike.<br>
+                        // Azure App Service endpoint: /api/v1/incidents
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts_extra %}
+<script src="{{ url_for('static', filename='js/simulator.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,22 @@
+{
+  "mode": "Indexed",
+  "policyRule": {
+    "if": {
+      "field": "[concat('tags[', parameters('tagName'), ']')]",
+      "exists": "false"
+    },
+    "then": {
+      "effect": "deny"
+    }
+  },
+  "parameters": {
+    "tagName": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Mandatory Tag Name (e.g. Environment, CostCenter, Owner)",
+        "description": "Enforces mandatory enterprise FinOps tagging for UK cloud infrastructure"
+      },
+      "defaultValue": "Environment"
+    }
+  }
+}

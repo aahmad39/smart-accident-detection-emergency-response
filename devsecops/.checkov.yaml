@@ -1,0 +1,20 @@
+# Checkov IaC Security & Compliance Configuration
+framework:
+  - terraform
+  - secrets
+  - github_actions
+
+output: cli,junitxml
+output-file-path: console,checkov-report.xml
+
+soft-fail: false
+compact: true
+
+# CIS Azure Benchmark Enforcements
+check:
+  - CKV_AZURE_18  # Ensure Storage Account uses customer managed keys or HTTPS only
+  - CKV_AZURE_44  # Ensure Storage Accounts use minimum TLS 1.2
+  - CKV_AZURE_88  # Ensure App Service enables HTTPS only
+  - CKV_AZURE_109 # Ensure Key Vault has purge protection enabled
+  - CKV_AZURE_113 # Ensure Azure SQL Database enables transparent data encryption
+  - CKV_AZURE_14  # Ensure App Service uses minimum TLS 1.2

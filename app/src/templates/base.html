@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Smart Accident Detection & Emergency Response System (UK){% endblock %}</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Custom Design System -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block head_extra %}{% endblock %}
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <header class="header-nav">
+        <a href="{{ url_for('web.dashboard') }}" class="brand-wrapper">
+            <div class="brand-icon">
+                <i class="fa-solid fa-car-burst fa-lg text-white"></i>
+            </div>
+            <div>
+                <span class="brand-title">Smart Accident Response</span>
+                <span class="brand-sub">UK Emergency CAD & Azure Cloud</span>
+            </div>
+        </a>
+
+        <ul class="nav-links">
+            <li><a href="{{ url_for('web.dashboard') }}" class="nav-link {% if request.endpoint == 'web.dashboard' %}active{% endif %}"><i class="fa-solid fa-chart-line"></i> Dashboard</a></li>
+            <li><a href="{{ url_for('web.incidents') }}" class="nav-link {% if request.endpoint == 'web.incidents' %}active{% endif %}"><i class="fa-solid fa-triangle-exclamation"></i> Incidents</a></li>
+            <li><a href="{{ url_for('web.dispatch_center') }}" class="nav-link {% if request.endpoint == 'web.dispatch_center' %}active{% endif %}"><i class="fa-solid fa-truck-medical"></i> 999 Dispatch</a></li>
+            <li><a href="{{ url_for('web.simulator') }}" class="nav-link {% if request.endpoint == 'web.simulator' %}active{% endif %}"><i class="fa-solid fa-bolt"></i> Crash Simulator</a></li>
+            <li><a href="{{ url_for('web.ai_hub') }}" class="nav-link {% if request.endpoint == 'web.ai_hub' %}active{% endif %}"><i class="fa-solid fa-brain"></i> AI Agents</a></li>
+        </ul>
+
+        <div class="nav-right">
+            <div class="live-badge">
+                <span class="pulse-dot"></span>
+                <span>UK LIVE MONITOR</span>
+            </div>
+            <a href="{{ url_for('web.simulator') }}" class="btn btn-danger" style="padding: 0.45rem 0.95rem; font-size: 0.8rem;">
+                <i class="fa-solid fa-satellite-dish"></i> Trigger Crash
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="container">
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            <span><i class="fa-solid fa-circle-info"></i> {{ message }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div>
+            <strong>Smart Accident Detection & Emergency Response System (UK)</strong> &bull; Monolithic 3-Tier Architecture
+        </div>
+        <div>
+            <span>Azure Cloud & DevSecOps</span> &bull; 
+            <span>Terraform IaC</span> &bull; 
+            <span>Azure OpenAI</span>
+        </div>
+    </footer>
+
+    <!-- App JavaScript -->
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    {% block scripts_extra %}{% endblock %}
+</body>
+</html>
